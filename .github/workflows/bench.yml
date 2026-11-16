@@ -1,0 +1,67 @@
+name: Benchmark on CORD
+
+# Runs four extraction configurations over a sample of the CORD v2 test split (CC BY 4.0), scores them, and commits
+# the per-document results, the response cache and the daily request ledger. Runs are resumable: finished documents
+# are skipped, so when a free daily quota runs out the run stops cleanly and the next run continues it.
+#
+# One-time setup: add the repository SECRET GROQ_API_KEY (from console.groq.com/keys).
+
+on:
+  schedule:
+    - cron: "30 2 * * *"      # after Groq's daily reset at 00:00 UTC
+  workflow_dispatch:
+    inputs:
+      configs:
+        description: "Space-separated configurations: ocr_rules ocr_llm vision verified"
+        default: "ocr_rules ocr_llm vision verified"
+      n:
+        description: "Number of CORD test receipts"
+        default: "100"
+      seed:
+        description: "Sample seed"
+        default: "1"
+      max_requests:
+        description: "Max Groq requests per model per configuration this run"
+        default: "900"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: bench
+  cancel-in-progress: false
+
+jobs:
+  bench:
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check setup
+        run: '[ -n "$GROQ_API_KEY" ] || { echo "::error::Add the GROQ_API_KEY repository secret."; exit 1; }'
+      - run: sudo apt-get update && sudo apt-get install -y tesseract-ocr
+      - run: pip install -e ".[eval]"
+      - name: Run benchmark
+        run: |
+          configs="${{ inputs.configs }}"; configs="${configs:-ocr_rules ocr_llm vision verified}"
+          n="${{ inputs.n }}"; n="${n:-100}"
+          seed="${{ inputs.seed }}"; seed="${seed:-1}"
+          max="${{ inputs.max_requests }}"; max="${max:-900}"
+          python -m docextract bench --configs $configs --n $n --seed $seed --max-requests $max
+      - name: Report
+        if: always()
+        run: python -m docextract report | tee -a "$GITHUB_STEP_SUMMARY"
+      - name: Commit results
+        if: always()
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add -A results
+          git diff --cached --quiet || git commit -m "Benchmark results"
+          git pull --rebase -X theirs && git push

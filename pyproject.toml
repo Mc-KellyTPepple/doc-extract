@@ -1,0 +1,16 @@
+[project]
+name = "doc-extract"
+version = "0.1.0"
+description = "Receipt and invoice extraction with a vision model, arithmetic validation that flags what does not add up, and a CORD benchmark against OCR baselines."
+requires-python = ">=3.11"
+dependencies = ["requests>=2.31", "pillow>=10.1"]
+
+[project.optional-dependencies]
+eval = ["datasets>=2.19"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
