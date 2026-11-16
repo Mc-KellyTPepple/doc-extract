@@ -1,0 +1,21 @@
+name: Probe Groq models
+
+# Lists the models this key can use and tests which ones accept an image. Free-tier model lists change, so run this
+# when the benchmark reports a model as unavailable.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      PYTHONPATH: src
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install -e .
+      - run: python -m docextract probe | tee -a "$GITHUB_STEP_SUMMARY"

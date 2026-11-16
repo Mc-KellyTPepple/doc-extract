@@ -187,6 +187,7 @@ class LLM:
         self.usage = Usage()
         self._limiters: dict[str, RateLimiter] = {}
         self._unavailable: set[str] = set()
+        self.unavailable_reasons: dict[str, str] = {}
 
     # ---- helpers -------------------------------------------------------
     def _limits(self, model: str) -> ModelLimits:
@@ -249,12 +250,14 @@ class LLM:
             except _DailyLimit:
                 self.ledger.mark_exhausted(model)
                 continue
-            except _Unavailable:
+            except _Unavailable as exc:
                 self._unavailable.add(model)
+                self.unavailable_reasons[model] = str(exc)[:200]
                 continue
             self._write_cache(requests_by_model[model], out)
             return {**out, "cached": False}
-        raise BudgetExhausted("every model in the chain is out of quota for today")
+        why = "; ".join(f"{m}: {r}" for m, r in self.unavailable_reasons.items())
+        raise BudgetExhausted("every model in the chain is out of quota for today" + (f" or unavailable ({why})" if why else ""))
 
     # ---- network -------------------------------------------------------
     def _call(self, model: str, req: dict, messages: list, tools: list | None) -> dict:

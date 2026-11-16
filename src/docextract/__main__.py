@@ -35,6 +35,7 @@ def main(argv=None) -> int:
 
     sub.add_parser("report", help="score saved results and write results.md / summary.json / failures.md")
     sub.add_parser("serve", help="run the HTTP API")
+    sub.add_parser("probe", help="list the Groq models for this key and test which ones accept an image")
 
     for sp in (e, b):
         sp.add_argument("--cache", default="results/cache")
@@ -57,6 +58,9 @@ def main(argv=None) -> int:
         build_report(Path("results"))
         print(Path("results/results.md").read_text())
         return 0
+    if args.cmd == "probe":
+        from .probe import probe
+        return probe(os.environ.get("GROQ_API_KEY"))
     if args.cmd == "serve":
         from .server import build_app, serve
         serve(build_app())
