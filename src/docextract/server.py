@@ -82,6 +82,8 @@ class App:
         self.lock = threading.Lock()   # one extraction at a time: the Groq rate limiter is shared
 
     def extract(self, image_field: str, ip: str) -> tuple[int, dict]:
+        if self.llm is None and self.runner is run_config:
+            return 503, {"error": "This demo is not configured yet (no model key on the server)."}
         try:
             data = decode_image(image_field)
         except ValueError as exc:
@@ -164,8 +166,12 @@ def make_handler(app: App):
 
 
 def build_app(per_ip: int = 6, daily_cap: int = 120) -> App:
-    llm = LLM(api_key=os.environ.get("GROQ_API_KEY"), models=VISION_MODELS,
-              cache_dir=None, ledger_path=Path(os.environ.get("LEDGER_PATH", "/tmp/groq_ledger.json")))
+    try:
+        llm = LLM(api_key=os.environ.get("GROQ_API_KEY"), models=VISION_MODELS,
+                  cache_dir=None, ledger_path=Path(os.environ.get("LEDGER_PATH", "/tmp/groq_ledger.json")))
+    except LLMError:
+        print("GROQ_API_KEY is not set: serving /health, but /extract will answer 503 until it is added.", flush=True)
+        llm = None
     return App(llm, Limits(per_ip, daily_cap))
 
 

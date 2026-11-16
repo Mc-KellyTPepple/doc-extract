@@ -62,6 +62,12 @@ class AppLogic(unittest.TestCase):
         self.assertEqual(code, 502)
         self.assertNotIn("secret", json.dumps(out))
 
+    def test_without_a_model_key_the_app_reports_not_configured(self):
+        from docextract.extract import run_config
+        code, out = App(None, runner=run_config).extract(data_url(receipt_png(["x"])), "d")
+        self.assertEqual(code, 503)
+        self.assertIn("not configured", out["error"])
+
     def test_non_image_bytes_are_a_400(self):
         from docextract.extract import run_config
         app = App(None, runner=run_config)
