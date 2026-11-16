@@ -1,0 +1,116 @@
+{
+ "configs": {
+  "ocr_llm": {
+   "all_fields_correct": {
+    "accuracy": 0.24,
+    "ci95": [
+     0.167,
+     0.332
+    ],
+    "correct": 24,
+    "of": 100
+   },
+   "cost": {
+    "model_calls_per_doc": 1.0,
+    "tokens_per_doc": 676.04
+   },
+   "documents": 100,
+   "items": {
+    "f1": 0.37849462365591396,
+    "precision": 0.4943820224719101,
+    "recall": 0.30662020905923343
+   },
+   "model_errors_not_scored": null,
+   "review": {
+    "accuracy_when_flagged": 0.09210526315789473,
+    "accuracy_when_not_flagged": 0.7083333333333334,
+    "flagged": 76,
+    "wrong_documents_caught": 0.9078947368421053
+   },
+   "subtotal": {
+    "accuracy": 0.3230769230769231,
+    "ci95": [
+     0.222,
+     0.444
+    ],
+    "correct": 21,
+    "of": 65
+   },
+   "tax": {
+    "accuracy": 0.1951219512195122,
+    "ci95": [
+     0.102,
+     0.34
+    ],
+    "correct": 8,
+    "of": 41
+   },
+   "total": {
+    "accuracy": 0.37894736842105264,
+    "ci95": [
+     0.288,
+     0.479
+    ],
+    "correct": 36,
+    "of": 95
+   }
+  },
+  "ocr_rules": {
+   "all_fields_correct": {
+    "accuracy": 0.11,
+    "ci95": [
+     0.063,
+     0.186
+    ],
+    "correct": 11,
+    "of": 100
+   },
+   "cost": {
+    "model_calls_per_doc": 0.0,
+    "tokens_per_doc": 0.0
+   },
+   "documents": 100,
+   "items": {
+    "f1": 0.0,
+    "precision": 0.0,
+    "recall": 0.0
+   },
+   "model_errors_not_scored": null,
+   "review": {
+    "accuracy_when_flagged": 0.0,
+    "accuracy_when_not_flagged": 0.4583333333333333,
+    "flagged": 76,
+    "wrong_documents_caught": 0.8539325842696629
+   },
+   "subtotal": {
+    "accuracy": 0.18461538461538463,
+    "ci95": [
+     0.109,
+     0.296
+    ],
+    "correct": 12,
+    "of": 65
+   },
+   "tax": {
+    "accuracy": 0.14634146341463414,
+    "ci95": [
+     0.069,
+     0.284
+    ],
+    "correct": 6,
+    "of": 41
+   },
+   "total": {
+    "accuracy": 0.25263157894736843,
+    "ci95": [
+     0.176,
+     0.348
+    ],
+    "correct": 24,
+    "of": 95
+   }
+  }
+ },
+ "dataset": "CORD v2 test sample",
+ "documents_scored": 100
+}

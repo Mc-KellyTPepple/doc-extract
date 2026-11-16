@@ -1,7 +1,7 @@
 {
  "2026-11-16": {
   "openai/gpt-oss-120b": {
-   "requests": 95
+   "requests": 190
   },
   "qwen/qwen3.8-27b": {
    "exhausted": true,
