@@ -33,9 +33,10 @@ DEFAULT_LIMITS: dict[str, ModelLimits] = {
     "llama-3.1-8b-instant": ModelLimits(30, 6_000, 14_400),
     "qwen/qwen3-32b": ModelLimits(60, 6_000, 1_000),
     "meta-llama/llama-4-scout-17b-16e-instruct": ModelLimits(30, 30_000, 1_000),
+    "qwen/qwen3.8-27b": ModelLimits(30, 6_000, 1_000),   # assumed; check console.groq.com/settings/limits
 }
 UNKNOWN_MODEL_LIMITS = ModelLimits(20, 6_000, 500)
-VISION_MODELS = ["meta-llama/llama-4-scout-17b-16e-instruct"]   # reads images
+VISION_MODELS = ["qwen/qwen3.8-27b"]   # reads images (llama-4-scout left the Groq free tier on 2026-06-17); found with `docextract probe`
 TEXT_MODELS = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]    # text only (used after OCR)
 DEFAULT_MODELS = VISION_MODELS
 
@@ -207,6 +208,8 @@ class LLM:
             req["tool_choice"] = tool_choice or "auto"
         if model.startswith("openai/gpt-oss"):
             req["reasoning_effort"] = "low"  # keeps token use (and the TPM budget) small
+        elif model.startswith("qwen/"):
+            req["reasoning_effort"] = "none"  # extraction needs no chain of thought; dropped automatically if the model rejects it
         return req
 
     def _cache_file(self, req: dict) -> Path | None:
