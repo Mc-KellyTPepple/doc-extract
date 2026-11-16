@@ -70,7 +70,7 @@ class AppLogic(unittest.TestCase):
 
     def test_non_image_bytes_are_a_400(self):
         from docextract.extract import run_config
-        app = App(None, runner=run_config)
+        app = App(object(), runner=run_config)   # any model stand-in: bad images are rejected before it is used
         code, out = app.extract("data:image/png;base64," + base64.b64encode(b"not an image at all").decode(), "c")
         self.assertEqual(code, 400)
 
