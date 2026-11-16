@@ -26,14 +26,14 @@ MAX_SIDE, JPEG_QUALITY = 1600, 85
 
 SYSTEM = """You read receipts and invoices and return their contents as one JSON object, and nothing else.
 
-Schema:
+Schema (every amount is a STRING copied exactly as printed; qty is a number):
 {"vendor": string|null, "date": string|null,
- "items": [{"name": string, "qty": number|null, "unit_price": number|null, "price": number|null}],
- "subtotal": number|null, "discount": number|null, "service": number|null, "tax": number|null, "total": number|null}
+ "items": [{"name": string, "qty": number|null, "unit_price": string|null, "price": string|null}],
+ "subtotal": string|null, "discount": string|null, "service": string|null, "tax": string|null, "total": string|null}
 
 Rules:
 - Copy what is printed. Never calculate a missing value and never invent one: use null when a field is not on the document.
-- Amounts are plain numbers: no currency symbol and no thousands separators. Write 1.234.500 or 1,234,500 as 1234500; write 12,50 as 12.5.
+- Write each amount as a string exactly as it is printed, keeping its dots and commas but dropping the currency symbol: "60.000", "1,234.50", "12,50", "-2.62". Never convert an amount to a number yourself; in many currencies "60.000" means sixty thousand, and writing it as a number would turn it into 60.
 - "price" on an item is the line total as printed (quantity times unit price). "total" is the final amount due.
 - "subtotal" is the amount before tax and service. "tax" is tax only; put service charges in "service".
 - Put each purchased line in "items" once, in the order printed. Skip payment lines (cash, change, card)."""

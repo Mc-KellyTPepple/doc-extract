@@ -16,6 +16,18 @@ class Extraction(unittest.TestCase):
         self.assertEqual([p["type"] for p in content], ["text", "image_url"])
         self.assertTrue(content[1]["image_url"]["url"].startswith("data:image/jpeg;base64,"))
 
+    def test_amounts_printed_with_thousands_dots_are_read_at_the_right_scale(self):
+        # the first benchmark run lost most of its accuracy to "60.000" being written as the JSON number 60.0
+        reply = {"vendor": None, "date": None, "items": [{"name": "Tea", "qty": 2, "unit_price": "30.000", "price": "60.000"}],
+                 "subtotal": "60.000", "discount": None, "service": None, "tax": None, "total": "60.000"}
+        res = run_config("verified", self.png, FakeLLM([reply]))
+        self.assertEqual((res.receipt.total, res.receipt.items[0].price, res.needs_review), (60000.0, 60000.0, False))
+
+    def test_the_prompt_asks_for_amounts_as_printed_text(self):
+        from docextract.extract import SYSTEM
+        self.assertIn("exactly as it is printed", SYSTEM)
+        self.assertIn('"60.000"', SYSTEM)
+
     def test_verified_skips_second_call_when_clean(self):
         llm = FakeLLM([GOOD])
         res = run_config("verified", self.png, llm)

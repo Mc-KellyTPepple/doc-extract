@@ -8,6 +8,11 @@ the model is shown which one and re-reads the image once. Anything still inconsi
 It runs on free plans only (free Groq models, free Render, free GitHub Actions) and is measured on the public
 [CORD v2](https://huggingface.co/datasets/naver-clova-ix/cord-v2) receipt set (CC BY 4.0) against OCR baselines.
 
+> **A mistake worth knowing about:** the first benchmark run (kept in `results/v1-amounts-as-numbers/`) used a prompt that
+> asked for amounts as numbers, and the model turned the printed `60.000` (sixty thousand) into `60.0`. Eleven of the 15
+> wrong documents were this one error, 1000x on every field, which the arithmetic check cannot catch because the sums
+> still agree. The prompt now asks for amounts as text exactly as printed. The benchmark is being re-run.
+>
 > **Status:** the pipeline, validator, API and test suite are complete. Benchmark numbers are added to
 > `results/results.md` by the `Benchmark on CORD` workflow; until it has run, this README makes no accuracy claim.
 
