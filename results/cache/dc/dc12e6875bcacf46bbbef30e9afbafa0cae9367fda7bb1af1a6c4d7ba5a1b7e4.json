@@ -1,0 +1,1 @@
+{"message": {"content": "{\"vendor\": null, \"date\": null, \"items\": [], \"subtotal\": null, \"discount\": null, \"service\": null, \"tax\": null, \"total\": null}", "role": "assistant"}, "model": "openai/gpt-oss-120b", "usage": {"completion_tokens": 63, "prompt_tokens": 346}}
