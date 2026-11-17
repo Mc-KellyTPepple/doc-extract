@@ -106,6 +106,23 @@ class Bench(unittest.TestCase):
             done = run_bench(docs, ["vision"], Dies([GOOD]), None, t / "out", log=lambda *_: None)
             self.assertEqual(done, {"vision": 1})
 
+    def test_a_document_needing_new_calls_does_not_block_cached_ones_behind_it(self):
+        # verified reuses vision's cached first reading, but a repair is a new call. Out of quota, doc 0 needs a
+        # repair and must be skipped, while docs 1 and 2 (clean, answered from the cache) must still finish.
+        class Cached(FakeLLM):
+            def chat(self, messages, **k):
+                if len(messages) > 2:          # a repair turn: no quota left
+                    raise BudgetExhausted("out of quota")
+                return super().chat(messages, **k)
+        with tempfile.TemporaryDirectory() as t:
+            t = Path(t)
+            docs = self.make_docs(t, 3)
+            llm = Cached([{**GOOD, "total": 98500}, GOOD, GOOD])
+            done = run_bench(docs, ["verified"], llm, None, t / "out", log=lambda *_: None)
+            self.assertEqual(done, {"verified": 2})
+            ids = [json.loads(x)["id"] for x in (t / "out" / "verified.jsonl").read_text().splitlines()]
+            self.assertEqual(ids, ["doc-1", "doc-2"])
+
     def test_report_compares_only_documents_every_config_finished(self):
         with tempfile.TemporaryDirectory() as t:
             t = Path(t)

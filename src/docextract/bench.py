@@ -30,7 +30,7 @@ def run_bench(docs: list[dict], configs: list[str], vision_llm: LLM | None, text
         path = out_dir / f"{config}.jsonl"
         done = _load(path)
         llm = text_llm if config == "ocr_llm" else vision_llm
-        errors = 0
+        errors = skipped = 0
         for doc in docs:
             if doc["id"] in done:
                 continue
@@ -38,8 +38,12 @@ def run_bench(docs: list[dict], configs: list[str], vision_llm: LLM | None, text
             try:
                 res = run_config(config, Path(doc["image"]).read_bytes(), vision_llm, text_llm)
             except BudgetExhausted as exc:
-                log(f"[{config}] stopping: {exc}")
-                break
+                # No quota for this document's model calls. Keep going: later documents may be answered from the
+                # response cache (for example the first reading of a receipt another configuration already read).
+                if not skipped:
+                    log(f"[{config}] out of quota, continuing with cached documents only: {exc}")
+                skipped += 1
+                continue
             except LLMError as exc:
                 errors += 1
                 log(f"[{config}] {doc['id']}: model error, skipped ({str(exc)[:120]})")
@@ -53,7 +57,7 @@ def run_bench(docs: list[dict], configs: list[str], vision_llm: LLM | None, text
                 f.write(json.dumps(row, sort_keys=True) + "\n")
             done[doc["id"]] = row
         finished[config] = len(done)
-        log(f"[{config}] {len(done)}/{len(docs)} documents done" + (f", {errors} model errors" if errors else ""))
+        log(f"[{config}] {len(done)}/{len(docs)} documents done" + (f", {skipped} waiting for quota" if skipped else "") + (f", {errors} model errors" if errors else ""))
     return finished
 
 
