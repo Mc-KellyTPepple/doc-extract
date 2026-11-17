@@ -5,7 +5,7 @@ guessing. A vision model reads the image into JSON; an arithmetic validator then
 (line prices add up to the subtotal, subtotal plus tax and service minus discount equals the total). If a check fails,
 the model is shown which one and re-reads the image once. Anything still inconsistent is flagged for a person.
 
-It runs on free plans only (free Groq models, free Render, free GitHub Actions) and is measured on the public
+It runs on Groq models, Render and GitHub Actions, and is measured on the public
 [CORD v2](https://huggingface.co/datasets/naver-clova-ix/cord-v2) receipt set (CC BY 4.0) against OCR baselines.
 
 > **A mistake worth knowing about:** the first benchmark run (kept in `results/v1-amounts-as-numbers/`) used a prompt that
@@ -47,7 +47,7 @@ Configurations are compared only on documents that all of them finished.
 - **No invented numbers.** The prompt tells the model to copy what is printed and use `null` otherwise; the validator
   never fills a gap.
 - **Privacy.** The API processes images in memory only. Nothing uploaded is stored or logged.
-- **Built for a free quota.** A rate limiter, response cache and daily ledger keep the Groq client inside free limits
+- **Built for a limited quota.** A rate limiter, response cache and daily ledger keep the Groq client inside the provider's limits
   (copied from the Data Analyst Agent project). The web service adds per-visitor and daily caps.
 
 ## Run it
@@ -72,17 +72,17 @@ POST /extract   {"image": "data:image/jpeg;base64,..."}
 GET  /health
 ```
 
-## Deploy (free)
+## Deploy
 
 1. Add the repository secret `GROQ_API_KEY`, then run the **Benchmark on CORD** workflow.
-2. Render dashboard, New, Blueprint, pick this repo (`render.yaml` selects the free plan). Set `GROQ_API_KEY` in the service's Environment tab.
-3. The free service sleeps when idle; the portfolio page wakes it when someone opens the demo. There is no keep-alive pinging.
+2. Render dashboard, New, Blueprint, pick this repo (`render.yaml` defines the service). Set `GROQ_API_KEY` in the service's Environment tab.
+3. The service sleeps when idle; the portfolio page wakes it when someone opens the demo. There is no keep-alive pinging.
 
 ## Limits
 
 - CORD receipts are Indonesian, photographed, mostly food and drink. Results do not automatically carry over to other
   languages, long invoices with many pages, or handwritten documents.
-- Vision-model quality on the free tier can change when the provider changes models.
+- Vision-model quality can change when the provider changes models.
 - The validator cannot catch errors that keep the arithmetic consistent (for example two misread digits that cancel).
 
 ## License

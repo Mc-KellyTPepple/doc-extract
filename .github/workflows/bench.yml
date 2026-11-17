@@ -2,7 +2,7 @@ name: Benchmark on CORD
 
 # Runs four extraction configurations over a sample of the CORD v2 test split (CC BY 4.0), scores them, and commits
 # the per-document results, the response cache and the daily request ledger. Runs are resumable: finished documents
-# are skipped, so when a free daily quota runs out the run stops cleanly and the next run continues it.
+# are skipped, so when a daily quota runs out the run stops cleanly and the next run continues it.
 #
 # One-time setup: add the repository SECRET GROQ_API_KEY (from console.groq.com/keys).
 

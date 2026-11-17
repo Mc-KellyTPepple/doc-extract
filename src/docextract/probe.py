@@ -1,4 +1,4 @@
-"""Find out which Groq models this key can use for images. Free-tier model lists change, so check instead of assuming."""
+"""Find out which Groq models this key can use for images. Model lists change, so check instead of assuming."""
 from __future__ import annotations
 
 import re

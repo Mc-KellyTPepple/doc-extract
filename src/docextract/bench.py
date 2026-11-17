@@ -1,5 +1,5 @@
 """Run the configurations over a CORD sample and write the results. Runs are resumable: finished documents are
-skipped, so when a free daily quota runs out the run stops cleanly and the next one continues it."""
+skipped, so when a daily quota runs out the run stops cleanly and the next one continues it."""
 from __future__ import annotations
 
 import json

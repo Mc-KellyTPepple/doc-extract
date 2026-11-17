@@ -1,6 +1,6 @@
 name: Probe Groq models
 
-# Lists the models this key can use and tests which ones accept an image. Free-tier model lists change, so run this
+# Lists the models this key can use and tests which ones accept an image. Model lists change, so run this
 # when the benchmark reports a model as unavailable.
 
 on:

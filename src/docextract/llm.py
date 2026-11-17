@@ -1,6 +1,6 @@
-"""Groq client (copied from the data-analyst-agent project, with image-aware token estimates) built for the free tier: rate limiter, model fallback chain, response cache, daily ledger.
+"""Groq client (copied from the data-analyst-agent project, with image-aware token estimates) built for tight rate limits: rate limiter, model fallback chain, response cache, daily ledger.
 
-Limits below are free-tier values at the time of writing and can change; check
+Limits below are the values at the time of writing and can change; check
 https://console.groq.com/settings/limits and override with `limits=`.
 """
 from __future__ import annotations
@@ -36,7 +36,7 @@ DEFAULT_LIMITS: dict[str, ModelLimits] = {
     "qwen/qwen3.8-27b": ModelLimits(30, 6_000, 1_000),   # assumed; check console.groq.com/settings/limits
 }
 UNKNOWN_MODEL_LIMITS = ModelLimits(20, 6_000, 500)
-VISION_MODELS = ["qwen/qwen3.8-27b"]   # reads images (llama-4-scout left the Groq free tier on 2026-06-17); found with `docextract probe`
+VISION_MODELS = ["qwen/qwen3.8-27b"]   # reads images (llama-4-scout left Groq's catalogue for this key on 2026-06-17); found with `docextract probe`
 TEXT_MODELS = ["openai/gpt-oss-120b", "openai/gpt-oss-20b"]    # text only (used after OCR)
 DEFAULT_MODELS = VISION_MODELS
 
