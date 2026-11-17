@@ -7,5 +7,11 @@
    "exhausted": true,
    "requests": 45
   }
+ },
+ "2026-11-17": {
+  "qwen/qwen3.8-27b": {
+   "exhausted": true,
+   "requests": 40
+  }
  }
 }

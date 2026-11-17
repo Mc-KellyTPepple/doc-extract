@@ -2,74 +2,74 @@
  "configs": {
   "ocr_llm": {
    "all_fields_correct": {
-    "accuracy": 0.24,
+    "accuracy": 0.175,
     "ci95": [
-     0.167,
-     0.332
+     0.087,
+     0.32
     ],
-    "correct": 24,
-    "of": 100
+    "correct": 7,
+    "of": 40
    },
    "cost": {
     "model_calls_per_doc": 1.0,
-    "tokens_per_doc": 676.04
+    "tokens_per_doc": 642.725
    },
-   "documents": 100,
+   "documents": 40,
    "items": {
-    "f1": 0.37849462365591396,
-    "precision": 0.4943820224719101,
-    "recall": 0.30662020905923343
+    "f1": 0.3023255813953489,
+    "precision": 0.4126984126984127,
+    "recall": 0.23853211009174313
    },
    "model_errors_not_scored": null,
    "review": {
-    "accuracy_when_flagged": 0.09210526315789473,
-    "accuracy_when_not_flagged": 0.7083333333333334,
-    "flagged": 76,
-    "wrong_documents_caught": 0.9078947368421053
+    "accuracy_when_flagged": 0.09090909090909091,
+    "accuracy_when_not_flagged": 0.5714285714285714,
+    "flagged": 33,
+    "wrong_documents_caught": 0.9090909090909091
    },
    "subtotal": {
-    "accuracy": 0.3230769230769231,
+    "accuracy": 0.3076923076923077,
     "ci95": [
-     0.222,
-     0.444
-    ],
-    "correct": 21,
-    "of": 65
-   },
-   "tax": {
-    "accuracy": 0.1951219512195122,
-    "ci95": [
-     0.102,
-     0.34
+     0.165,
+     0.5
     ],
     "correct": 8,
-    "of": 41
+    "of": 26
+   },
+   "tax": {
+    "accuracy": 0.11764705882352941,
+    "ci95": [
+     0.033,
+     0.343
+    ],
+    "correct": 2,
+    "of": 17
    },
    "total": {
-    "accuracy": 0.37894736842105264,
+    "accuracy": 0.32432432432432434,
     "ci95": [
-     0.288,
-     0.479
+     0.196,
+     0.485
     ],
-    "correct": 36,
-    "of": 95
+    "correct": 12,
+    "of": 37
    }
   },
   "ocr_rules": {
    "all_fields_correct": {
-    "accuracy": 0.11,
+    "accuracy": 0.05,
     "ci95": [
-     0.063,
-     0.186
+     0.014,
+     0.165
     ],
-    "correct": 11,
-    "of": 100
+    "correct": 2,
+    "of": 40
    },
    "cost": {
     "model_calls_per_doc": 0.0,
     "tokens_per_doc": 0.0
    },
-   "documents": 100,
+   "documents": 40,
    "items": {
     "f1": 0.0,
     "precision": 0.0,
@@ -78,39 +78,94 @@
    "model_errors_not_scored": null,
    "review": {
     "accuracy_when_flagged": 0.0,
-    "accuracy_when_not_flagged": 0.4583333333333333,
-    "flagged": 76,
-    "wrong_documents_caught": 0.8539325842696629
+    "accuracy_when_not_flagged": 0.2857142857142857,
+    "flagged": 33,
+    "wrong_documents_caught": 0.868421052631579
    },
    "subtotal": {
-    "accuracy": 0.18461538461538463,
+    "accuracy": 0.11538461538461539,
     "ci95": [
-     0.109,
-     0.296
+     0.04,
+     0.29
     ],
-    "correct": 12,
-    "of": 65
+    "correct": 3,
+    "of": 26
    },
    "tax": {
-    "accuracy": 0.14634146341463414,
+    "accuracy": 0.17647058823529413,
     "ci95": [
-     0.069,
-     0.284
+     0.062,
+     0.41
     ],
-    "correct": 6,
-    "of": 41
+    "correct": 3,
+    "of": 17
    },
    "total": {
-    "accuracy": 0.25263157894736843,
+    "accuracy": 0.1891891891891892,
     "ci95": [
-     0.176,
-     0.348
+     0.095,
+     0.342
     ],
-    "correct": 24,
-    "of": 95
+    "correct": 7,
+    "of": 37
+   }
+  },
+  "vision": {
+   "all_fields_correct": {
+    "accuracy": 0.925,
+    "ci95": [
+     0.801,
+     0.974
+    ],
+    "correct": 37,
+    "of": 40
+   },
+   "cost": {
+    "model_calls_per_doc": 1.0,
+    "tokens_per_doc": 2132.875
+   },
+   "documents": 40,
+   "items": {
+    "f1": 0.958904109589041,
+    "precision": 0.9545454545454546,
+    "recall": 0.963302752293578
+   },
+   "model_errors_not_scored": null,
+   "review": {
+    "accuracy_when_flagged": 1.0,
+    "accuracy_when_not_flagged": 0.9117647058823529,
+    "flagged": 6,
+    "wrong_documents_caught": 0.0
+   },
+   "subtotal": {
+    "accuracy": 0.9615384615384616,
+    "ci95": [
+     0.811,
+     0.993
+    ],
+    "correct": 25,
+    "of": 26
+   },
+   "tax": {
+    "accuracy": 1.0,
+    "ci95": [
+     0.816,
+     1.0
+    ],
+    "correct": 17,
+    "of": 17
+   },
+   "total": {
+    "accuracy": 1.0,
+    "ci95": [
+     0.906,
+     1.0
+    ],
+    "correct": 37,
+    "of": 37
    }
   }
  },
  "dataset": "CORD v2 test sample",
- "documents_scored": 100
+ "documents_scored": 40
 }
