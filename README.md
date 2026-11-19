@@ -11,10 +11,26 @@ It runs on Groq models, Render and GitHub Actions, and is measured on the public
 > **A mistake worth knowing about:** the first benchmark run (kept in `results/v1-amounts-as-numbers/`) used a prompt that
 > asked for amounts as numbers, and the model turned the printed `60.000` (sixty thousand) into `60.0`. Eleven of the 15
 > wrong documents were this one error, 1000x on every field, which the arithmetic check cannot catch because the sums
-> still agree. The prompt now asks for amounts as text exactly as printed. The benchmark is being re-run.
->
-> **Status:** the pipeline, validator, API and test suite are complete. Benchmark numbers are added to
-> `results/results.md` by the `Benchmark on CORD` workflow; until it has run, this README makes no accuracy claim.
+> still agree. The prompt now asks for amounts as text exactly as printed, and the benchmark was re-run from scratch.
+
+## Results
+
+100 CORD v2 test receipts (seed 1), the same receipts for every configuration, 95% Wilson intervals
+(full table: `results/results.md`, failures: `results/failures.md`).
+
+| Configuration | Total | Subtotal | Tax | Item F1 | All key fields |
+|---|---|---|---|---|---|
+| OCR + keyword rules | 25% | 18% | 15% | 0.00 | 11% |
+| OCR + text model | 38% | 32% | 20% | 0.38 | 24% |
+| Vision model | 100% (96-100) | 98% | 83% | 0.92 | 88% (80-93) |
+| Vision + validator re-read | 100% | 98% | 83% | 0.92 | 88% |
+
+- **Reading the image directly wins by a wide margin** over OCR followed by a text model, at about 2,100 tokens per receipt against about 680.
+- **The validator and re-read did not help on this data.** The re-read ran on 9 receipts, the second reading was adopted on 8, and all 9 stayed flagged;
+  accuracy is identical to the single read. The flag caught 1 of the 12 receipts with a wrong key field, and 8 of the 9 receipts it flagged had every key field right
+  (it points at line-item problems). The vision model's errors are mostly a missed line (15 receipts) or an empty tax field (7), and both keep the arithmetic consistent.
+- `cord-test-0013` has a garbled label in the dataset itself (subtotal 4663646636), so it counts against the model although the model's reading looks right.
+- With 100 receipts, differences under about 10 points are noise.
 
 ## The four configurations
 
@@ -61,7 +77,7 @@ python -m docextract serve                # HTTP API on $PORT (default 7860)
 pip install -e ".[eval]" && sudo apt-get install tesseract-ocr
 python -m docextract bench --n 100        # downloads CORD, runs all configurations (resumable)
 python -m docextract report               # writes results/results.md, summary.json, failures.md
-python -m unittest discover -s tests -t . # 36 tests, no network needed
+python -m unittest discover -s tests -t . # 40 tests, no network needed
 ```
 
 API:
